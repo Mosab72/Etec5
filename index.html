@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة عقود الاعتماد الأكاديمي</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- رأس الصفحة -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-section">
+                    <h1>🎓 نظام إدارة عقود الاعتماد الأكاديمي</h1>
+                    <p class="subtitle">المركز الوطني للتقويم والاعتماد الأكاديمي</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- الإحصائيات الرئيسية -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">📄</div>
+                    <div class="stat-content">
+                        <div class="stat-value" id="total-contracts">0</div>
+                        <div class="stat-label">إجمالي العقود</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">🏛️</div>
+                    <div class="stat-content">
+                        <div class="stat-value" id="total-universities">0</div>
+                        <div class="stat-label">الجامعات والكليات</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">📚</div>
+                    <div class="stat-content">
+                        <div class="stat-value" id="total-departments">0</div>
+                        <div class="stat-label">التخصصات الرئيسية</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- علامات التبويب -->
+    <section class="tabs-section">
+        <div class="container">
+            <div class="tabs">
+                <button class="tab active" data-tab="overview">
+                    📊 نظرة عامة
+                </button>
+                <button class="tab" data-tab="details">
+                    📝 تفاصيل العقود
+                </button>
+                <button class="tab" data-tab="universities">
+                    🏛️ حسب الجامعات
+                </button>
+                <button class="tab" data-tab="departments">
+                    📚 حسب الأقسام
+                </button>
+                <button class="tab" data-tab="all">
+                    📋 جميع العقود
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- محتوى التبويبات -->
+    <main class="main-content">
+        <div class="container">
+            
+            <!-- نظرة عامة -->
+            <div id="overview-content" class="tab-content active">
+                <div id="overview-stats"></div>
+            </div>
+
+            <!-- تفاصيل العقود -->
+            <div id="details-content" class="tab-content">
+                <div id="contracts-details-list"></div>
+            </div>
+
+            <!-- حسب الجامعات -->
+            <div id="universities-content" class="tab-content">
+                <div id="universities-list"></div>
+            </div>
+
+            <!-- حسب الأقسام -->
+            <div id="departments-content" class="tab-content">
+                <div id="departments-list"></div>
+            </div>
+
+            <!-- جميع العقود -->
+            <div id="all-content" class="tab-content">
+                <div id="all-contracts-list"></div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- تذييل الصفحة -->
+    <footer class="footer">
+        <div class="container">
+            <p>© 2024 المركز الوطني للتقويم والاعتماد الأكاديمي - جميع الحقوق محفوظة</p>
+            <p class="footer-version">الإصدار 4.2 - طبعة حكومية</p>
+        </div>
+    </footer>
+
+    <!-- تحميل البيانات والسكريبت -->
+    <script src="contracts_data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
