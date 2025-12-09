@@ -1,34 +1,21 @@
-/* ============================================
-   نظام إدارة عقود الاعتماد الأكاديمي
-   الإصدار 4.2 - طبعة حكومية
-   ============================================ */
-
-/* ============================================
-   المتغيرات العامة
-   ============================================ */
+/* الألوان الحكومية */
 :root {
-    --primary-color: #006341;
-    --primary-dark: #004d31;
-    --primary-light: #1a7a4f;
-    --accent-color: #b8925a;
-    --accent-light: #d4b178;
-    
-    --bg-color: #f5f7fa;
-    --card-bg: #ffffff;
-    --text-primary: #1a202c;
-    --text-secondary: #4a5568;
-    --border-color: #e2e8f0;
-    
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
-    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
-    
-    --transition: all 0.3s ease;
+    --primary-green: #006341;
+    --secondary-gold: #b8925a;
+    --light-green: #00a859;
+    --dark-green: #004d31;
+    --light-gold: #d4b483;
+    --background: #f5f7fa;
+    --white: #ffffff;
+    --text-dark: #1a1a1a;
+    --text-light: #666666;
+    --border-color: #e0e0e0;
+    --shadow: rgba(0, 0, 0, 0.1);
+    --success: #28a745;
+    --warning: #ffc107;
+    --danger: #dc3545;
 }
 
-/* ============================================
-   الإعدادات العامة
-   ============================================ */
 * {
     margin: 0;
     padding: 0;
@@ -36,11 +23,10 @@
 }
 
 body {
-    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
-    background-color: var(--bg-color);
-    color: var(--text-primary);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--background);
+    color: var(--text-dark);
     line-height: 1.6;
-    direction: rtl;
 }
 
 .container {
@@ -49,149 +35,151 @@ body {
     padding: 0 20px;
 }
 
-/* ============================================
-   رأس الصفحة
-   ============================================ */
+/* الهيدر */
 .header {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-    color: white;
-    padding: 30px 0;
-    box-shadow: var(--shadow-md);
+    background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
+    color: var(--white);
+    padding: 25px 0;
+    box-shadow: 0 4px 20px var(--shadow);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
 .header-content {
-    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
 }
 
-.logo-section h1 {
-    font-size: 2rem;
-    font-weight: bold;
-    margin-bottom: 8px;
-}
-
-.subtitle {
-    font-size: 1.1rem;
-    opacity: 0.9;
-}
-
-/* ============================================
-   الإحصائيات الرئيسية
-   ============================================ */
-.stats-section {
-    padding: 30px 0;
-    background: linear-gradient(to bottom, var(--primary-color), var(--bg-color));
-}
-
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 25px;
-    margin-top: -20px;
-}
-
-.stat-card {
-    background: var(--card-bg);
-    border-radius: 12px;
-    padding: 25px;
-    box-shadow: var(--shadow-lg);
+.logo-section {
     display: flex;
     align-items: center;
     gap: 20px;
-    transition: var(--transition);
-    border-right: 4px solid var(--accent-color);
 }
 
-.stat-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+.logo-emblem {
+    background: var(--white);
+    padding: 10px;
+    border-radius: 50%;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-.stat-icon {
-    font-size: 3rem;
-    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.1));
+.logo-text h1 {
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 5px;
 }
 
-.stat-content {
-    flex: 1;
+.logo-text p {
+    font-size: 14px;
+    opacity: 0.9;
 }
 
-.stat-value {
-    font-size: 2.5rem;
-    font-weight: bold;
-    color: var(--primary-color);
-    line-height: 1;
+.header-stats {
+    display: flex;
+    gap: 15px;
+}
+
+.stat-badge {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    padding: 15px 30px;
+    border-radius: 12px;
+    text-align: center;
+    border: 2px solid var(--secondary-gold);
+}
+
+.stat-number {
+    display: block;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--secondary-gold);
 }
 
 .stat-label {
-    font-size: 1.1rem;
-    color: var(--text-secondary);
-    margin-top: 5px;
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-/* ============================================
-   علامات التبويب
-   ============================================ */
-.tabs-section {
-    background: var(--card-bg);
-    border-bottom: 2px solid var(--border-color);
-    box-shadow: var(--shadow-sm);
+/* التنقل */
+.navigation {
+    background: var(--white);
+    box-shadow: 0 2px 10px var(--shadow);
     position: sticky;
-    top: 0;
-    z-index: 100;
+    top: 85px;
+    z-index: 999;
 }
 
 .tabs {
     display: flex;
     gap: 5px;
     overflow-x: auto;
-    padding: 10px 0;
 }
 
-.tab {
+.tab-btn {
+    flex: 1;
+    min-width: 200px;
+    padding: 18px 25px;
     background: transparent;
     border: none;
-    padding: 15px 25px;
-    font-size: 1rem;
+    border-bottom: 3px solid transparent;
+    font-size: 16px;
     font-weight: 600;
-    color: var(--text-secondary);
+    color: var(--text-light);
     cursor: pointer;
-    border-radius: 8px;
-    transition: var(--transition);
-    white-space: nowrap;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
 }
 
-.tab:hover {
-    background: var(--bg-color);
-    color: var(--primary-color);
+.tab-icon {
+    font-size: 20px;
 }
 
-.tab.active {
-    background: var(--primary-color);
-    color: white;
-    box-shadow: var(--shadow-md);
+.tab-count {
+    background: var(--secondary-gold);
+    color: var(--white);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
 }
 
-/* ============================================
-   المحتوى الرئيسي
-   ============================================ */
+.tab-btn:hover {
+    background: rgba(0, 99, 65, 0.05);
+    color: var(--primary-green);
+}
+
+.tab-btn.active {
+    color: var(--primary-green);
+    border-bottom-color: var(--secondary-gold);
+    background: rgba(0, 99, 65, 0.08);
+}
+
+/* المحتوى */
 .main-content {
-    padding: 40px 0;
-    min-height: 60vh;
+    padding: 30px 0 60px;
 }
 
 .tab-content {
     display: none;
-    animation: fadeIn 0.4s ease-in-out;
 }
 
 .tab-content.active {
     display: block;
+    animation: fadeIn 0.4s ease;
 }
 
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateY(20px);
     }
     to {
         opacity: 1;
@@ -199,538 +187,432 @@ body {
     }
 }
 
-/* ============================================
-   نظرة عامة
-   ============================================ */
-.overview-section {
-    background: var(--card-bg);
-    border-radius: 12px;
-    padding: 30px;
+/* العناوين */
+.section-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--primary-green);
     margin-bottom: 25px;
-    box-shadow: var(--shadow-md);
-}
-
-.overview-section h3 {
-    font-size: 1.5rem;
-    color: var(--primary-color);
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid var(--accent-color);
-}
-
-.overview-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 15px;
-}
-
-.overview-card {
-    background: linear-gradient(135deg, var(--bg-color), #ffffff);
-    padding: 20px;
-    border-radius: 8px;
-    border-right: 3px solid var(--accent-color);
-    transition: var(--transition);
-}
-
-.overview-card:hover {
-    transform: translateX(-5px);
-    box-shadow: var(--shadow-md);
-}
-
-.overview-label {
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-    margin-bottom: 8px;
-}
-
-.overview-value {
-    font-size: 2rem;
-    font-weight: bold;
-    color: var(--primary-color);
-}
-
-.overview-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.overview-item {
+    padding-bottom: 15px;
+    border-bottom: 3px solid var(--secondary-gold);
     display: flex;
     align-items: center;
-    gap: 15px;
-    padding: 15px;
-    background: var(--bg-color);
-    border-radius: 8px;
-    transition: var(--transition);
+    gap: 10px;
 }
 
-.overview-item:hover {
-    background: white;
-    box-shadow: var(--shadow-sm);
+.page-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--primary-green);
+    margin-bottom: 25px;
 }
 
-.overview-rank {
-    width: 35px;
-    height: 35px;
-    background: var(--accent-color);
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    flex-shrink: 0;
+/* بطاقات الإحصائيات */
+.stats-section {
+    margin-bottom: 40px;
 }
 
-.overview-name {
-    flex: 1;
-    font-weight: 600;
-    color: var(--text-primary);
-}
-
-.overview-count {
-    font-weight: bold;
-    color: var(--primary-color);
-    padding: 5px 12px;
-    background: var(--bg-color);
-    border-radius: 20px;
-}
-
-.overview-percentage {
-    font-weight: bold;
-    color: var(--accent-color);
-    padding: 5px 12px;
-    background: var(--card-bg);
-    border-radius: 20px;
-}
-
-/* ============================================
-   فلتر العقود
-   ============================================ */
-.contracts-filter {
-    background: linear-gradient(135deg, var(--primary-light), var(--primary-color));
-    padding: 25px;
-    border-radius: 12px;
-    margin-bottom: 30px;
-    box-shadow: var(--shadow-md);
-}
-
-.contracts-filter h3 {
-    color: white;
-    font-size: 1.3rem;
-    margin-bottom: 15px;
-}
-
-.contracts-filter select {
-    width: 100%;
-    padding: 12px 20px;
-    font-size: 1rem;
-    border: none;
-    border-radius: 8px;
-    background: white;
-    color: var(--text-primary);
-    cursor: pointer;
-    box-shadow: var(--shadow-sm);
-    transition: var(--transition);
-}
-
-.contracts-filter select:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(184, 146, 90, 0.3);
-}
-
-/* ============================================
-   بطاقات العقود - تفاصيل
-   ============================================ */
-.contracts-grid {
+.stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 25px;
 }
 
-.contract-card {
-    background: var(--card-bg);
-    border-radius: 12px;
-    box-shadow: var(--shadow-md);
-    overflow: hidden;
-    transition: var(--transition);
-    border-right: 4px solid var(--accent-color);
-}
-
-.contract-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-lg);
-}
-
-.contract-header {
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
-    color: white;
-    padding: 15px 20px;
+.stat-card {
+    background: var(--white);
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px var(--shadow);
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 20px;
+    transition: all 0.3s ease;
+    border-right: 5px solid transparent;
 }
 
-.contract-id {
-    font-weight: bold;
-    font-size: 1.1rem;
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
 }
 
-.contract-status-badge {
-    background: rgba(255, 255, 255, 0.2);
-    padding: 5px 15px;
-    border-radius: 20px;
-    font-size: 0.9rem;
+.stat-card.total {
+    border-right-color: var(--primary-green);
 }
 
-.contract-body {
-    padding: 20px;
+.stat-card.scheduled {
+    border-right-color: var(--success);
 }
 
-.contract-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--border-color);
+.stat-card.not-scheduled {
+    border-right-color: var(--warning);
 }
 
-.contract-row:last-child {
-    border-bottom: none;
+.stat-card.undefined {
+    border-right-color: var(--text-light);
 }
 
-.contract-label {
+.stat-icon {
+    font-size: 48px;
+    opacity: 0.9;
+}
+
+.stat-info h3 {
+    font-size: 15px;
+    color: var(--text-light);
     font-weight: 600;
-    color: var(--text-secondary);
-    flex: 0 0 45%;
+    margin-bottom: 8px;
 }
 
-.contract-value {
-    color: var(--text-primary);
-    flex: 0 0 50%;
-    text-align: left;
+.stat-value {
+    font-size: 42px;
+    font-weight: 700;
+    color: var(--primary-green);
+    line-height: 1;
 }
 
-/* ============================================
-   قائمة الجامعات
-   ============================================ */
-.university-filter {
-    background: var(--card-bg);
-    padding: 25px;
-    border-radius: 12px;
+.stat-percentage {
+    font-size: 14px;
+    color: var(--text-light);
+    margin-top: 5px;
+}
+
+/* الجامعات */
+.universities-section,
+.departments-section {
+    background: var(--white);
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px var(--shadow);
     margin-bottom: 30px;
-    box-shadow: var(--shadow-md);
-    border-right: 4px solid var(--primary-color);
 }
 
-.university-filter h3 {
-    color: var(--primary-color);
-    margin-bottom: 15px;
+.filter-controls {
+    margin-bottom: 25px;
 }
 
-.university-filter select {
+.search-input {
     width: 100%;
-    padding: 12px 20px;
-    font-size: 1rem;
+    max-width: 500px;
+    padding: 14px 20px;
     border: 2px solid var(--border-color);
-    border-radius: 8px;
-    background: white;
-    cursor: pointer;
-    transition: var(--transition);
+    border-radius: 10px;
+    font-size: 15px;
+    transition: all 0.3s ease;
 }
 
-.university-filter select:focus {
+.search-input:focus {
     outline: none;
-    border-color: var(--accent-color);
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 3px rgba(0, 99, 65, 0.1);
 }
 
 .universities-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
 }
 
-.university-item {
-    background: var(--card-bg);
+.university-card {
+    background: var(--background);
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: var(--shadow-sm);
-    display: flex;
-    align-items: center;
-    gap: 15px;
+    border-radius: 12px;
+    border-right: 4px solid var(--secondary-gold);
+    transition: all 0.3s ease;
     cursor: pointer;
-    transition: var(--transition);
-    border-right: 3px solid var(--accent-color);
 }
 
-.university-item:hover {
+.university-card:hover {
     transform: translateX(-5px);
-    box-shadow: var(--shadow-md);
-    border-right-color: var(--primary-color);
+    box-shadow: 0 4px 15px var(--shadow);
 }
 
 .university-rank {
-    width: 40px;
-    height: 40px;
-    background: var(--primary-color);
-    color: white;
+    display: inline-block;
+    background: var(--primary-green);
+    color: var(--white);
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    flex-shrink: 0;
+    text-align: center;
+    line-height: 32px;
+    font-weight: 700;
+    font-size: 14px;
+    margin-left: 12px;
 }
 
 .university-name {
-    flex: 1;
+    font-size: 17px;
     font-weight: 600;
-    color: var(--text-primary);
+    color: var(--text-dark);
+    margin-bottom: 10px;
 }
 
 .university-count {
-    font-weight: bold;
-    color: var(--accent-color);
-    padding: 8px 16px;
-    background: var(--bg-color);
-    border-radius: 20px;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--primary-green);
 }
 
-/* ============================================
-   قائمة الأقسام
-   ============================================ */
-.departments-grid {
+.university-label {
+    font-size: 13px;
+    color: var(--text-light);
+}
+
+/* الأقسام */
+.departments-list {
     display: grid;
-    gap: 15px;
-}
-
-.department-item {
-    background: var(--card-bg);
-    padding: 25px;
-    border-radius: 10px;
-    box-shadow: var(--shadow-sm);
-    display: flex;
-    align-items: center;
     gap: 20px;
-    transition: var(--transition);
-    border-right: 4px solid var(--accent-color);
 }
 
-.department-item:hover {
+.department-card {
+    background: linear-gradient(135deg, var(--white) 0%, var(--background) 100%);
+    padding: 25px;
+    border-radius: 12px;
+    border-right: 5px solid var(--secondary-gold);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.department-card:hover {
     transform: translateX(-5px);
-    box-shadow: var(--shadow-md);
+    box-shadow: 0 4px 20px var(--shadow);
+}
+
+.department-info {
+    flex: 1;
 }
 
 .department-rank {
-    width: 45px;
-    height: 45px;
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
-    color: white;
+    display: inline-block;
+    background: var(--primary-green);
+    color: var(--white);
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 1.2rem;
-    flex-shrink: 0;
+    text-align: center;
+    line-height: 40px;
+    font-weight: 700;
+    font-size: 18px;
+    margin-left: 15px;
 }
 
 .department-name {
-    flex: 1;
+    font-size: 20px;
     font-weight: 600;
-    font-size: 1.1rem;
-    color: var(--text-primary);
+    color: var(--text-dark);
 }
 
 .department-stats {
-    display: flex;
-    gap: 15px;
-    align-items: center;
+    text-align: center;
 }
 
 .department-count {
-    font-weight: bold;
-    color: var(--primary-color);
-    padding: 8px 16px;
-    background: var(--bg-color);
-    border-radius: 20px;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--primary-green);
+    display: block;
 }
 
 .department-percentage {
-    font-weight: bold;
-    color: white;
-    padding: 8px 16px;
-    background: var(--accent-color);
-    border-radius: 20px;
+    font-size: 18px;
+    color: var(--secondary-gold);
+    font-weight: 600;
 }
 
-/* ============================================
-   جميع العقود
-   ============================================ */
-.all-contracts-header {
+/* بطاقات العقود */
+.content-header {
+    margin-bottom: 30px;
+}
+
+.filter-bar {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    background: var(--card-bg);
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.filter-select {
+    flex: 1;
+    min-width: 200px;
+    padding: 14px 20px;
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    font-size: 15px;
+    background: var(--white);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: var(--primary-green);
+}
+
+.contracts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 25px;
+}
+
+.contract-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 4px 20px var(--shadow);
+    transition: all 0.3s ease;
+    border-top: 4px solid var(--secondary-gold);
+}
+
+.contract-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+.contract-header {
+    background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+    color: var(--white);
+    padding: 15px;
     border-radius: 10px;
     margin-bottom: 20px;
-    box-shadow: var(--shadow-sm);
 }
 
-.all-contracts-header h3 {
-    color: var(--primary-color);
-    font-size: 1.3rem;
+.contract-id {
+    font-size: 14px;
+    opacity: 0.9;
+    margin-bottom: 5px;
 }
 
-.reset-filter {
-    background: var(--accent-color);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: var(--transition);
+.contract-university {
+    font-size: 18px;
+    font-weight: 700;
 }
 
-.reset-filter:hover {
-    background: var(--accent-light);
-    transform: scale(1.05);
-}
-
-.all-contracts-grid {
-    display: grid;
-    gap: 15px;
-}
-
-.contract-item {
-    background: var(--card-bg);
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: var(--shadow-sm);
-    transition: var(--transition);
-    border-right: 3px solid var(--accent-color);
-}
-
-.contract-item:hover {
-    transform: translateX(-5px);
-    box-shadow: var(--shadow-md);
-}
-
-.contract-item-header {
+.contract-field {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid var(--border-color);
-}
-
-.contract-item-id {
-    font-weight: bold;
-    color: var(--primary-color);
-    font-size: 1.1rem;
-}
-
-.contract-item-status {
-    background: var(--bg-color);
-    padding: 5px 15px;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-}
-
-.contract-item-body {
-    display: flex;
-    flex-direction: column;
+    align-items: flex-start;
     gap: 10px;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
 }
 
-.contract-item-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 0;
+.contract-field:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
 }
 
-.contract-item-info span {
-    color: var(--text-secondary);
+.field-icon {
+    font-size: 20px;
+    min-width: 24px;
 }
 
-.contract-item-info strong {
-    color: var(--text-primary);
+.field-content {
+    flex: 1;
 }
 
-/* ============================================
-   التذييل
-   ============================================ */
+.field-label {
+    font-size: 13px;
+    color: var(--text-light);
+    font-weight: 600;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.field-value {
+    font-size: 15px;
+    color: var(--text-dark);
+    font-weight: 500;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.status-scheduled {
+    background: rgba(40, 167, 69, 0.1);
+    color: var(--success);
+}
+
+.status-not-scheduled {
+    background: rgba(255, 193, 7, 0.1);
+    color: #d39e00;
+}
+
+.status-undefined {
+    background: rgba(108, 117, 125, 0.1);
+    color: #6c757d;
+}
+
+/* الفوتر */
 .footer {
-    background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
-    color: white;
-    padding: 30px 0;
+    background: var(--primary-green);
+    color: var(--white);
     text-align: center;
+    padding: 25px 0;
     margin-top: 50px;
 }
 
-.footer p {
-    margin: 5px 0;
-    opacity: 0.9;
-}
-
-.footer-version {
-    font-size: 0.9rem;
-    opacity: 0.7;
-}
-
-/* ============================================
-   التصميم المتجاوب
-   ============================================ */
+/* التجاوب */
 @media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .logo-section {
+        flex-direction: column;
+    }
+
+    .tabs {
+        flex-direction: column;
+    }
+
+    .tab-btn {
+        min-width: auto;
+    }
+
     .stats-grid {
         grid-template-columns: 1fr;
     }
-    
-    .tabs {
-        flex-wrap: nowrap;
-        overflow-x: auto;
-    }
-    
-    .contracts-grid,
+
     .universities-grid {
         grid-template-columns: 1fr;
     }
-    
-    .overview-grid {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+
+    .contracts-grid {
+        grid-template-columns: 1fr;
     }
-    
-    .contract-row {
+
+    .filter-bar {
         flex-direction: column;
-        gap: 5px;
     }
-    
-    .contract-label,
-    .contract-value {
-        flex: 1;
-        text-align: right;
+
+    .filter-select {
+        width: 100%;
     }
 }
 
-@media (max-width: 480px) {
-    .logo-section h1 {
-        font-size: 1.5rem;
-    }
-    
-    .subtitle {
-        font-size: 0.9rem;
-    }
-    
-    .stat-value {
-        font-size: 2rem;
-    }
-    
-    .overview-grid {
-        grid-template-columns: 1fr;
-    }
+/* تحسينات إضافية */
+.no-results {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-light);
+}
+
+.no-results-icon {
+    font-size: 64px;
+    margin-bottom: 20px;
+    opacity: 0.5;
+}
+
+.no-results-text {
+    font-size: 20px;
+    font-weight: 600;
 }

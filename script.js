@@ -1,564 +1,374 @@
-// Academic Contracts Management System - Script
-// Version 4.2 - Government Edition
+// نظام إدارة عقود الاعتماد الأكاديمي
+// تاريخ الإنشاء: 2025-12-03
 
-// ============================================
-// الحالة العامة للنظام
-// ============================================
-let currentTab = 'overview';
-let filteredContracts = [...contractsData];
-let selectedUniversity = 'all';
-let selectedStatus = 'all';
+// البيانات الإحصائية
+const universities = [
+    { name: "جامعة الملك عبد العزيز", count: 83, rank: 1 },
+    { name: "جامعة طيبة", count: 39, rank: 2 },
+    { name: "جامعة الإمام عبد الرحمن بن فيصل", count: 36, rank: 3 },
+    { name: "جامعة الملك سعود", count: 30, rank: 4 },
+    { name: "جامعة جدة", count: 28, rank: 5 },
+    { name: "جامعة حفر الباطن", count: 26, rank: 6 },
+    { name: "جامعة الطائف", count: 23, rank: 7 },
+    { name: "جامعة الملك فيصل", count: 22, rank: 8 },
+    { name: "جامعة القصيم", count: 18, rank: 9 },
+    { name: "جامعة الأميرة نورة بنت عبد الرحمن", count: 17, rank: 10 },
+    { name: "جامعة جازان", count: 16, rank: 11 },
+    { name: "جامعة الباحة", count: 10, rank: 12 },
+    { name: "جامعة أم القرى", count: 10, rank: 13 },
+    { name: "جامعة شقراء", count: 10, rank: 14 },
+    { name: "جامعة الأمير سطام بن عبد العزيز", count: 9, rank: 15 },
+    { name: "جامعة المجمعة", count: 7, rank: 16 },
+    { name: "جامعة نجران", count: 7, rank: 17 },
+    { name: "جامعة الجوف", count: 6, rank: 18 },
+    { name: "جامعة حائل", count: 6, rank: 19 },
+    { name: "جامعة المعرفة", count: 4, rank: 20 },
+    { name: "كليات الأصالة", count: 4, rank: 21 },
+    { name: "كليات بريدة الأهلية", count: 4, rank: 22 },
+    { name: "الجامعة الإسلامية", count: 3, rank: 23 },
+    { name: "جامعة الأعمال والتكنولوجيا", count: 3, rank: 24 },
+    { name: "جامعة بيشة", count: 3, rank: 25 },
+    { name: "جامعة الإمام محمد بن سعود الإسلامية", count: 2, rank: 26 },
+    { name: "جامعة الملك سعود بن عبد العزيز للعلوم الصحية", count: 2, rank: 27 },
+    { name: "جامعة تبوك", count: 2, rank: 28 },
+    { name: "جامعة عفت", count: 2, rank: 29 },
+    { name: "كليات عنيزة", count: 2, rank: 30 },
+    { name: "كلية الأمير سلطان العسكرية للعلوم الصحية بالظهران", count: 2, rank: 31 },
+    { name: "كلية جدة العالمية", count: 2, rank: 32 },
+    { name: "جامعة الفيصل", count: 1, rank: 33 },
+    { name: "جامعة الملك خالد", count: 1, rank: 34 },
+    { name: "جامعة اليمامة", count: 1, rank: 35 },
+    { name: "جامعة سليمان الراجحي", count: 1, rank: 36 },
+    { name: "كلية الخليج للعلوم الإدارية والإنسانية", count: 1, rank: 37 },
+    { name: "كلية الريان الأهلية", count: 1, rank: 38 },
+    { name: "كلية الملك فهد الأمنية", count: 1, rank: 39 }
+];
 
-// ============================================
-// تهيئة النظام عند التحميل
-// ============================================
+const departments = [
+    { name: "إدارة برامج العلوم الإنسانية والتربوية", count: 156, percentage: 35.1, rank: 1 },
+    { name: "إدارة برامج العلوم الصحية", count: 91, percentage: 20.4, rank: 2 },
+    { name: "إدارة برامج التخصصات العلمية", count: 77, percentage: 17.3, rank: 3 },
+    { name: "إدارة برامج العلوم الهندسية والحاسوبية", count: 73, percentage: 16.4, rank: 4 },
+    { name: "إدارة برامج العلوم الإسلامية والعربية", count: 48, percentage: 10.8, rank: 5 }
+];
+
+// تهيئة التطبيق
 document.addEventListener('DOMContentLoaded', function() {
     initializeTabs();
-    updateStatistics();
-    updateOverview();
+    renderUniversities();
+    renderDepartments();
+    renderContracts();
+    setupFilters();
+    setupSearch();
 });
 
-// ============================================
-// إدارة علامات التبويب
-// ============================================
+// التنقل بين التبويبات
 function initializeTabs() {
-    const tabs = document.querySelectorAll('.tab');
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            const tabName = tab.dataset.tab;
-            switchTab(tabName);
-        });
-    });
+    const tabButtons = document.querySelectorAll('.tab-btn');
     
-    // تفعيل نظرة عامة كتبويب افتراضي
-    switchTab('overview');
-}
-
-function switchTab(tabName) {
-    currentTab = tabName;
-    
-    // تحديث علامات التبويب
-    document.querySelectorAll('.tab').forEach(tab => {
-        tab.classList.remove('active');
-        if (tab.dataset.tab === tabName) {
-            tab.classList.add('active');
-        }
-    });
-    
-    // إخفاء جميع المحتويات
-    document.querySelectorAll('.tab-content').forEach(content => {
-        content.classList.remove('active');
-    });
-    
-    // إظهار المحتوى المطلوب
-    const targetContent = document.getElementById(tabName + '-content');
-    if (targetContent) {
-        targetContent.classList.add('active');
-    }
-    
-    // تحديث المحتوى حسب التبويب
-    switch(tabName) {
-        case 'overview':
-            updateOverview();
-            break;
-        case 'details':
-            displayContractDetails();
-            break;
-        case 'universities':
-            displayUniversitiesList();
-            break;
-        case 'departments':
-            displayDepartmentsList();
-            break;
-        case 'all':
-            displayAllContracts();
-            break;
-    }
-}
-
-// ============================================
-// تحديث الإحصائيات
-// ============================================
-function updateStatistics() {
-    // إحصاء الجامعات الفريدة
-    const uniqueUniversities = [...new Set(contractsData.map(c => c.university))].length;
-    
-    // إحصاء الأقسام الفريدة
-    const uniqueDepartments = [...new Set(contractsData.map(c => c.department))].length;
-    
-    // تحديث البطاقات
-    document.getElementById('total-contracts').textContent = contractsData.length;
-    document.getElementById('total-universities').textContent = uniqueUniversities;
-    document.getElementById('total-departments').textContent = uniqueDepartments;
-}
-
-// ============================================
-// نظرة عامة
-// ============================================
-function updateOverview() {
-    const overviewContent = document.getElementById('overview-stats');
-    
-    // إحصائيات حسب حالة العقد
-    const statusStats = getContractStatusStats();
-    
-    // أعلى 5 جامعات
-    const topUniversities = getTopUniversities(5);
-    
-    // توزيع الأقسام
-    const departmentStats = getDepartmentStats();
-    
-    let html = `
-        <div class="overview-section">
-            <h3>📊 حالة العقود</h3>
-            <div class="overview-grid">
-                <div class="overview-card">
-                    <div class="overview-label">إجمالي العقود</div>
-                    <div class="overview-value">${contractsData.length}</div>
-                </div>
-                <div class="overview-card">
-                    <div class="overview-label">غير محددة</div>
-                    <div class="overview-value">${statusStats.undefined}</div>
-                </div>
-                <div class="overview-card">
-                    <div class="overview-label">تم جدولة الزيارة - متأخر</div>
-                    <div class="overview-value">${statusStats.visitScheduledDelayed}</div>
-                </div>
-                <div class="overview-card">
-                    <div class="overview-label">بدون وثائق - متأخر</div>
-                    <div class="overview-value">${statusStats.noDocsDelayed}</div>
-                </div>
-                <div class="overview-card">
-                    <div class="overview-label">لم تتم الجدولة - متأخر</div>
-                    <div class="overview-value">${statusStats.notScheduledDelayed}</div>
-                </div>
-                <div class="overview-card">
-                    <div class="overview-label">تم جدولة الزيارة</div>
-                    <div class="overview-value">${statusStats.visitScheduled}</div>
-                </div>
-                <div class="overview-card">
-                    <div class="overview-label">بدون وثائق محدثة</div>
-                    <div class="overview-value">${statusStats.noDocs}</div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="overview-section">
-            <h3>🏛️ أعلى 5 جامعات</h3>
-            <div class="overview-list">
-                ${topUniversities.map((uni, index) => `
-                    <div class="overview-item">
-                        <span class="overview-rank">${index + 1}</span>
-                        <span class="overview-name">${uni.name}</span>
-                        <span class="overview-count">${uni.count} عقد</span>
-                    </div>
-                `).join('')}
-            </div>
-        </div>
-        
-        <div class="overview-section">
-            <h3>📚 التوزيع حسب التخصصات</h3>
-            <div class="overview-list">
-                ${departmentStats.map(dept => `
-                    <div class="overview-item">
-                        <span class="overview-name">${dept.name}</span>
-                        <span class="overview-count">${dept.count} عقد</span>
-                        <span class="overview-percentage">${dept.percentage}%</span>
-                    </div>
-                `).join('')}
-            </div>
-        </div>
-    `;
-    
-    overviewContent.innerHTML = html;
-}
-
-function getContractStatusStats() {
-    let stats = {
-        undefined: 0,
-        visitScheduledDelayed: 0,
-        noDocsDelayed: 0,
-        notScheduledDelayed: 0,
-        visitScheduled: 0,
-        noDocs: 0
-    };
-    
-    // حساب العقود غير المحددة (لم تتم جدولة الزيارة العادية بدون تأخير)
-    // سنفترض أن أول 228 من "لم تتم جدولة الزيارة" هي غير محددة
-    let notScheduledCount = 0;
-    
-    contractsData.forEach(c => {
-        const vc = c.visitComplianceStatus || '';
-        const vs = c.visitScheduled || '';
-        
-        if (vc === 'لم تتم جدولة الزيارة') {
-            if (notScheduledCount < 228) {
-                stats.undefined++;
-            } else {
-                stats.notScheduledDelayed++;
-            }
-            notScheduledCount++;
-        }
-        else if (vc === 'تم جدولة الزيارة - متأخر') {
-            stats.visitScheduledDelayed++;
-        }
-        else if (vc.includes('بدون تسليم وثائق محدثة') && vc.includes('متأخر')) {
-            stats.noDocsDelayed++;
-        }
-        else if (vc === 'تم جدولة الزيارة') {
-            stats.visitScheduled++;
-        }
-        else if (vc.includes('بدون تسليم وثائق محدثة') && !vc.includes('متأخر')) {
-            stats.noDocs++;
-        }
-    });
-    
-    return stats;
-}
-
-function getTopUniversities(limit) {
-    const universityCounts = {};
-    contractsData.forEach(c => {
-        universityCounts[c.university] = (universityCounts[c.university] || 0) + 1;
-    });
-    
-    return Object.entries(universityCounts)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, limit)
-        .map(([name, count]) => ({ name, count }));
-}
-
-function getDepartmentStats() {
-    const departmentCounts = {};
-    contractsData.forEach(c => {
-        departmentCounts[c.department] = (departmentCounts[c.department] || 0) + 1;
-    });
-    
-    const total = contractsData.length;
-    return Object.entries(departmentCounts)
-        .sort((a, b) => b[1] - a[1])
-        .map(([name, count]) => ({
-            name,
-            count,
-            percentage: ((count / total) * 100).toFixed(1)
-        }));
-}
-
-// ============================================
-// تفاصيل العقود مع الفلتر
-// ============================================
-function displayContractDetails() {
-    const detailsContainer = document.getElementById('contracts-details-list');
-    
-    // إنشاء الفلتر
-    const filterHtml = `
-        <div class="contracts-filter">
-            <h3>🔍 فلتر حالة العقود</h3>
-            <select id="status-filter" onchange="filterContractsByStatus(this.value)">
-                <option value="all">الكل (${contractsData.length})</option>
-                <option value="undefined">غير محددة (228)</option>
-                <option value="visitScheduledDelayed">تم جدولة الزيارة - متأخر (95)</option>
-                <option value="noDocsDelayed">بدون تسليم وثائق - متأخر (59)</option>
-                <option value="notScheduledDelayed">لم تتم جدولة الزيارة - متأخر (42)</option>
-                <option value="visitScheduled">تم جدولة الزيارة (19)</option>
-                <option value="noDocs">بدون تسليم وثائق محدثة (2)</option>
-            </select>
-        </div>
-    `;
-    
-    // عرض العقود
-    const contractsHtml = filteredContracts.map(contract => `
-        <div class="contract-card">
-            <div class="contract-header">
-                <span class="contract-id">عقد #${contract.id}</span>
-                <span class="contract-status-badge">${getStatusLabel(contract)}</span>
-            </div>
-            <div class="contract-body">
-                <div class="contract-row">
-                    <span class="contract-label">🏛️ الجامعة:</span>
-                    <span class="contract-value">${contract.university}</span>
-                </div>
-                <div class="contract-row">
-                    <span class="contract-label">📚 القسم:</span>
-                    <span class="contract-value">${contract.department}</span>
-                </div>
-                <div class="contract-row">
-                    <span class="contract-label">📖 البرنامج:</span>
-                    <span class="contract-value">${contract.program}</span>
-                </div>
-                <div class="contract-row">
-                    <span class="contract-label">🎓 الدرجة العلمية:</span>
-                    <span class="contract-value">${contract.degree}</span>
-                </div>
-                <div class="contract-row">
-                    <span class="contract-label">⚙️ الحالة:</span>
-                    <span class="contract-value">${contract.status}</span>
-                </div>
-                <div class="contract-row">
-                    <span class="contract-label">📅 تاريخ البداية:</span>
-                    <span class="contract-value">${contract.contractStart}</span>
-                </div>
-                <div class="contract-row">
-                    <span class="contract-label">📅 تاريخ الانتهاء:</span>
-                    <span class="contract-value">${contract.contractEnd}</span>
-                </div>
-                <div class="contract-row">
-                    <span class="contract-label">📊 نسبة التقدم:</span>
-                    <span class="contract-value">${contract.progress}</span>
-                </div>
-                <div class="contract-row">
-                    <span class="contract-label">📝 تاريخ استلام الوثائق:</span>
-                    <span class="contract-value">${contract.docsReceived || 'لم يتم الاستلام'}</span>
-                </div>
-                <div class="contract-row">
-                    <span class="contract-label">📋 حالة الوثائق:</span>
-                    <span class="contract-value">${contract.docsComplianceStatus}</span>
-                </div>
-                <div class="contract-row">
-                    <span class="contract-label">🗓️ التاريخ المجدول لزيارة التحقق:</span>
-                    <span class="contract-value">${contract.visitScheduled || 'لم تتم الجدولة'}</span>
-                </div>
-                <div class="contract-row">
-                    <span class="contract-label">🗓️ التاريخ الفعلي المجدول لزيارة المراجعين:</span>
-                    <span class="contract-value">${getActualReviewersDate(contract)}</span>
-                </div>
-                <div class="contract-row">
-                    <span class="contract-label">✅ اتباع شروط التاريخ المجدول:</span>
-                    <span class="contract-value">${contract.visitComplianceStatus}</span>
-                </div>
-            </div>
-        </div>
-    `).join('');
-    
-    detailsContainer.innerHTML = filterHtml + '<div class="contracts-grid">' + contractsHtml + '</div>';
-}
-
-function getStatusLabel(contract) {
-    const vc = contract.visitComplianceStatus || '';
-    const vs = contract.visitScheduled || '';
-    
-    if (vc === 'لم تتم جدولة الزيارة' && !vs) {
-        return 'غير محددة';
-    }
-    
-    return vc;
-}
-
-function getActualReviewersDate(contract) {
-    // التاريخ الفعلي للمراجعين = visitScheduled + 15 يوم (كمثال)
-    // إذا كان هناك تاريخ مجدول، نضيف له فترة
-    if (contract.visitScheduled && contract.visitScheduled.trim() !== '') {
-        try {
-            const parts = contract.visitScheduled.split('/');
-            if (parts.length === 3) {
-                const date = new Date(parts[2], parts[0] - 1, parts[1]);
-                date.setDate(date.getDate() + 15); // إضافة 15 يوم
-                return `${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}/${date.getFullYear()}`;
-            }
-        } catch (e) {
-            return 'لم يتم التحديد';
-        }
-    }
-    return 'لم يتم التحديد';
-}
-
-function filterContractsByStatus(status) {
-    selectedStatus = status;
-    
-    if (status === 'all') {
-        filteredContracts = [...contractsData];
-    } else {
-        let notScheduledCount = 0;
-        
-        filteredContracts = contractsData.filter(c => {
-            const vc = c.visitComplianceStatus || '';
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const tabName = button.getAttribute('data-tab');
             
-            switch(status) {
-                case 'undefined':
-                    if (vc === 'لم تتم جدولة الزيارة') {
-                        if (notScheduledCount < 228) {
-                            notScheduledCount++;
-                            return true;
-                        }
-                    }
-                    return false;
-                    
-                case 'visitScheduledDelayed':
-                    return vc === 'تم جدولة الزيارة - متأخر';
-                    
-                case 'noDocsDelayed':
-                    return vc.includes('بدون تسليم وثائق محدثة') && vc.includes('متأخر');
-                    
-                case 'notScheduledDelayed':
-                    if (vc === 'لم تتم جدولة الزيارة') {
-                        notScheduledCount++;
-                        return notScheduledCount > 228;
-                    }
-                    return false;
-                    
-                case 'visitScheduled':
-                    return vc === 'تم جدولة الزيارة';
-                    
-                case 'noDocs':
-                    return vc.includes('بدون تسليم وثائق محدثة') && !vc.includes('متأخر');
-                    
-                default:
-                    return true;
+            // إزالة الحالة النشطة من جميع الأزرار
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            
+            // إخفاء جميع المحتويات
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // إظهار المحتوى المطلوب
+            document.getElementById(tabName).classList.add('active');
+        });
+    });
+}
+
+// عرض الجامعات
+function renderUniversities() {
+    const container = document.getElementById('universitiesList');
+    let html = '';
+    
+    universities.forEach(uni => {
+        html += `
+            <div class="university-card" data-university="${uni.name}">
+                <div>
+                    <span class="university-rank">${uni.rank}</span>
+                    <span class="university-name">${uni.name}</span>
+                </div>
+                <div style="margin-top: 10px;">
+                    <span class="university-count">${uni.count}</span>
+                    <span class="university-label"> عقد</span>
+                </div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+}
+
+// عرض الأقسام
+function renderDepartments() {
+    const container = document.getElementById('departmentsList');
+    let html = '';
+    
+    departments.forEach(dept => {
+        html += `
+            <div class="department-card">
+                <div class="department-info">
+                    <span class="department-rank">${dept.rank}</span>
+                    <span class="department-name">${dept.name}</span>
+                </div>
+                <div class="department-stats">
+                    <span class="department-count">${dept.count}</span>
+                    <span class="department-percentage">${dept.percentage}%</span>
+                    <div style="font-size: 13px; color: #666; margin-top: 5px;">عقد</div>
+                </div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+}
+
+// عرض العقود
+function renderContracts() {
+    // تم جدولة الزيارة
+    const scheduled = contractsData.filter(c => c.visitComplianceStatus === "تم جدولة الزيارة");
+    renderContractsList(scheduled, 'scheduledContracts');
+    
+    // لم تتم الجدولة
+    const notScheduled = contractsData.filter(c => c.visitComplianceStatus === "لم تتم جدولة الزيارة -متاخر عن التاريخ المجدول للزيارة");
+    renderContractsList(notScheduled, 'notScheduledContracts');
+    
+    // غير محددة
+    const undefined = contractsData.filter(c => c.visitComplianceStatus === "غير محددة");
+    renderContractsList(undefined, 'undefinedContracts');
+}
+
+// عرض قائمة العقود
+function renderContractsList(contracts, containerId) {
+    const container = document.getElementById(containerId);
+    
+    if (contracts.length === 0) {
+        container.innerHTML = `
+            <div class="no-results">
+                <div class="no-results-icon">📭</div>
+                <div class="no-results-text">لا توجد عقود في هذه الفئة</div>
+            </div>
+        `;
+        return;
+    }
+    
+    let html = '';
+    
+    contracts.forEach(contract => {
+        const statusClass = getStatusClass(contract.visitComplianceStatus);
+        
+        html += `
+            <div class="contract-card">
+                <div class="contract-header">
+                    <div class="contract-id">عقد رقم #${contract.id}</div>
+                    <div class="contract-university">🏛️ ${contract.university}</div>
+                </div>
+                
+                <div class="contract-field">
+                    <span class="field-icon">📚</span>
+                    <div class="field-content">
+                        <span class="field-label">القسم</span>
+                        <span class="field-value">${contract.department}</span>
+                    </div>
+                </div>
+                
+                <div class="contract-field">
+                    <span class="field-icon">📖</span>
+                    <div class="field-content">
+                        <span class="field-label">البرنامج</span>
+                        <span class="field-value">${contract.program}</span>
+                    </div>
+                </div>
+                
+                <div class="contract-field">
+                    <span class="field-icon">🎓</span>
+                    <div class="field-content">
+                        <span class="field-label">الدرجة العلمية</span>
+                        <span class="field-value">${contract.degree}</span>
+                    </div>
+                </div>
+                
+                <div class="contract-field">
+                    <span class="field-icon">⚙️</span>
+                    <div class="field-content">
+                        <span class="field-label">الحالة</span>
+                        <span class="field-value">${contract.status}</span>
+                    </div>
+                </div>
+                
+                <div class="contract-field">
+                    <span class="field-icon">📅</span>
+                    <div class="field-content">
+                        <span class="field-label">تاريخ البداية</span>
+                        <span class="field-value">${contract.contractStart}</span>
+                    </div>
+                </div>
+                
+                <div class="contract-field">
+                    <span class="field-icon">📅</span>
+                    <div class="field-content">
+                        <span class="field-label">تاريخ الانتهاء</span>
+                        <span class="field-value">${contract.contractEnd}</span>
+                    </div>
+                </div>
+                
+                <div class="contract-field">
+                    <span class="field-icon">📊</span>
+                    <div class="field-content">
+                        <span class="field-label">نسبة التقدم</span>
+                        <span class="field-value">${contract.progress}</span>
+                    </div>
+                </div>
+                
+                <div class="contract-field">
+                    <span class="field-icon">📝</span>
+                    <div class="field-content">
+                        <span class="field-label">تاريخ استلام الوثائق</span>
+                        <span class="field-value">${contract.docsReceived}</span>
+                    </div>
+                </div>
+                
+                <div class="contract-field">
+                    <span class="field-icon">📋</span>
+                    <div class="field-content">
+                        <span class="field-label">حالة الوثائق</span>
+                        <span class="field-value">${contract.docsComplianceStatus}</span>
+                    </div>
+                </div>
+                
+                <div class="contract-field">
+                    <span class="field-icon">🗓️</span>
+                    <div class="field-content">
+                        <span class="field-label">التاريخ المجدول لزيارة المراجعين</span>
+                        <span class="field-value">${contract.visitScheduled}</span>
+                    </div>
+                </div>
+                
+                <div class="contract-field">
+                    <span class="field-icon">✅</span>
+                    <div class="field-content">
+                        <span class="field-label">اتباع شروط التاريخ المجدول</span>
+                        <span class="status-badge ${statusClass}">${contract.visitComplianceStatus}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+}
+
+// تحديد فئة الحالة
+function getStatusClass(status) {
+    if (status === "تم جدولة الزيارة") return "status-scheduled";
+    if (status === "لم تتم جدولة الزيارة -متاخر عن التاريخ المجدول للزيارة") return "status-not-scheduled";
+    return "status-undefined";
+}
+
+// إعداد الفلاتر
+function setupFilters() {
+    const filterSelects = [
+        'filterUniversityScheduled',
+        'filterDepartmentScheduled',
+        'filterUniversityNotScheduled',
+        'filterDepartmentNotScheduled',
+        'filterUniversityUndefined',
+        'filterDepartmentUndefined'
+    ];
+    
+    // ملء قوائم الجامعات
+    filterSelects.filter(id => id.includes('University')).forEach(id => {
+        const select = document.getElementById(id);
+        universities.forEach(uni => {
+            const option = document.createElement('option');
+            option.value = uni.name;
+            option.textContent = uni.name;
+            select.appendChild(option);
+        });
+    });
+    
+    // ملء قوائم الأقسام
+    filterSelects.filter(id => id.includes('Department')).forEach(id => {
+        const select = document.getElementById(id);
+        departments.forEach(dept => {
+            const option = document.createElement('option');
+            option.value = dept.name;
+            option.textContent = dept.name;
+            select.appendChild(option);
+        });
+    });
+    
+    // إضافة مستمعي الأحداث
+    filterSelects.forEach(id => {
+        document.getElementById(id).addEventListener('change', applyFilters);
+    });
+}
+
+// تطبيق الفلاتر
+function applyFilters() {
+    const tabs = ['Scheduled', 'NotScheduled', 'Undefined'];
+    
+    tabs.forEach(tab => {
+        const universityFilter = document.getElementById(`filterUniversity${tab}`).value;
+        const departmentFilter = document.getElementById(`filterDepartment${tab}`).value;
+        const searchValue = document.getElementById(`search${tab}`).value.toLowerCase();
+        
+        let statusValue;
+        if (tab === 'Scheduled') statusValue = "تم جدولة الزيارة";
+        else if (tab === 'NotScheduled') statusValue = "لم تتم جدولة الزيارة -متاخر عن التاريخ المجدول للزيارة";
+        else statusValue = "غير محددة";
+        
+        let filtered = contractsData.filter(c => c.visitComplianceStatus === statusValue);
+        
+        if (universityFilter) {
+            filtered = filtered.filter(c => c.university === universityFilter);
+        }
+        
+        if (departmentFilter) {
+            filtered = filtered.filter(c => c.department === departmentFilter);
+        }
+        
+        if (searchValue) {
+            filtered = filtered.filter(c => 
+                c.university.toLowerCase().includes(searchValue) ||
+                c.department.toLowerCase().includes(searchValue) ||
+                c.program.toLowerCase().includes(searchValue)
+            );
+        }
+        
+        renderContractsList(filtered, `${tab.charAt(0).toLowerCase() + tab.slice(1)}Contracts`);
+    });
+}
+
+// إعداد البحث
+function setupSearch() {
+    const searchInputs = ['searchScheduled', 'searchNotScheduled', 'searchUndefined'];
+    
+    searchInputs.forEach(id => {
+        document.getElementById(id).addEventListener('input', applyFilters);
+    });
+    
+    // بحث الجامعات
+    document.getElementById('universitySearch').addEventListener('input', function(e) {
+        const searchValue = e.target.value.toLowerCase();
+        const cards = document.querySelectorAll('.university-card');
+        
+        cards.forEach(card => {
+            const universityName = card.getAttribute('data-university').toLowerCase();
+            if (universityName.includes(searchValue)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
             }
         });
-    }
-    
-    displayContractDetails();
-}
-
-// ============================================
-// قائمة الجامعات
-// ============================================
-function displayUniversitiesList() {
-    const universitiesContainer = document.getElementById('universities-list');
-    
-    // إحصاء العقود لكل جامعة
-    const universityCounts = {};
-    contractsData.forEach(contract => {
-        universityCounts[contract.university] = (universityCounts[contract.university] || 0) + 1;
     });
-    
-    // تحويل لمصفوفة وترتيب
-    const universitiesArray = Object.entries(universityCounts)
-        .map(([name, count]) => ({ name, count }))
-        .sort((a, b) => b.count - a.count);
-    
-    // إنشاء الفلتر
-    const filterHtml = `
-        <div class="university-filter">
-            <h3>🔍 بحث عن جامعة</h3>
-            <select id="university-filter" onchange="filterByUniversity(this.value)">
-                <option value="all">جميع الجامعات (${contractsData.length} عقد)</option>
-                ${universitiesArray.map(uni => `
-                    <option value="${uni.name}">${uni.name} (${uni.count} عقد)</option>
-                `).join('')}
-            </select>
-        </div>
-    `;
-    
-    // عرض القائمة
-    const listHtml = universitiesArray.map((uni, index) => `
-        <div class="university-item" onclick="filterByUniversity('${uni.name}')">
-            <span class="university-rank">${index + 1}</span>
-            <span class="university-name">${uni.name}</span>
-            <span class="university-count">${uni.count} عقد</span>
-        </div>
-    `).join('');
-    
-    universitiesContainer.innerHTML = filterHtml + '<div class="universities-grid">' + listHtml + '</div>';
-}
-
-function filterByUniversity(universityName) {
-    selectedUniversity = universityName;
-    
-    if (universityName === 'all') {
-        filteredContracts = [...contractsData];
-    } else {
-        filteredContracts = contractsData.filter(c => c.university === universityName);
-    }
-    
-    // التبديل لتبويب جميع العقود
-    switchTab('all');
-}
-
-// ============================================
-// قائمة الأقسام
-// ============================================
-function displayDepartmentsList() {
-    const departmentsContainer = document.getElementById('departments-list');
-    
-    // إحصاء العقود لكل قسم
-    const departmentCounts = {};
-    contractsData.forEach(contract => {
-        departmentCounts[contract.department] = (departmentCounts[contract.department] || 0) + 1;
-    });
-    
-    // تحويل لمصفوفة وترتيب
-    const departmentsArray = Object.entries(departmentCounts)
-        .map(([name, count]) => ({ name, count, percentage: ((count / contractsData.length) * 100).toFixed(1) }))
-        .sort((a, b) => b.count - a.count);
-    
-    // عرض القائمة
-    const listHtml = departmentsArray.map((dept, index) => `
-        <div class="department-item">
-            <span class="department-rank">${index + 1}</span>
-            <span class="department-name">${dept.name}</span>
-            <div class="department-stats">
-                <span class="department-count">${dept.count} عقد</span>
-                <span class="department-percentage">${dept.percentage}%</span>
-            </div>
-        </div>
-    `).join('');
-    
-    departmentsContainer.innerHTML = '<div class="departments-grid">' + listHtml + '</div>';
-}
-
-// ============================================
-// جميع العقود
-// ============================================
-function displayAllContracts() {
-    const allContainer = document.getElementById('all-contracts-list');
-    
-    const contractsHtml = filteredContracts.map(contract => `
-        <div class="contract-item">
-            <div class="contract-item-header">
-                <span class="contract-item-id">عقد #${contract.id}</span>
-                <span class="contract-item-status">${contract.status}</span>
-            </div>
-            <div class="contract-item-body">
-                <div class="contract-item-info">
-                    <strong>🏛️ ${contract.university}</strong>
-                    <span>${contract.department}</span>
-                </div>
-                <div class="contract-item-info">
-                    <span>📖 ${contract.program}</span>
-                    <span>🎓 ${contract.degree}</span>
-                </div>
-                <div class="contract-item-info">
-                    <span>📅 ${contract.contractStart} - ${contract.contractEnd}</span>
-                    <span>📊 ${contract.progress}</span>
-                </div>
-            </div>
-        </div>
-    `).join('');
-    
-    allContainer.innerHTML = `
-        <div class="all-contracts-header">
-            <h3>📋 عرض ${filteredContracts.length} من ${contractsData.length} عقد</h3>
-            ${selectedUniversity !== 'all' ? `
-                <button class="reset-filter" onclick="resetFilters()">
-                    ✖️ إلغاء الفلتر
-                </button>
-            ` : ''}
-        </div>
-        <div class="all-contracts-grid">${contractsHtml}</div>
-    `;
-}
-
-function resetFilters() {
-    selectedUniversity = 'all';
-    selectedStatus = 'all';
-    filteredContracts = [...contractsData];
-    
-    // إعادة تحميل المحتوى الحالي
-    switchTab(currentTab);
-}
-
-// ============================================
-// دوال مساعدة
-// ============================================
-function searchContracts(query) {
-    const searchTerm = query.toLowerCase();
-    filteredContracts = contractsData.filter(contract => 
-        contract.university.toLowerCase().includes(searchTerm) ||
-        contract.department.toLowerCase().includes(searchTerm) ||
-        contract.program.toLowerCase().includes(searchTerm) ||
-        contract.degree.toLowerCase().includes(searchTerm)
-    );
-    
-    switchTab('all');
 }
