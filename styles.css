@@ -616,3 +616,30 @@ body {
     font-size: 20px;
     font-weight: 600;
 }
+
+/* عداد النتائج */
+.results-counter {
+    background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+    color: var(--white);
+    padding: 15px 25px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    margin: 20px 0;
+    box-shadow: 0 4px 15px var(--shadow);
+}
+
+/* تحسينات الفلاتر */
+.filter-bar {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+    .filter-bar {
+        grid-template-columns: 1fr;
+    }
+}

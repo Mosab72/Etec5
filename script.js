@@ -1,5 +1,6 @@
 // نظام إدارة عقود الاعتماد الأكاديمي
-// تاريخ الإنشاء: 2025-12-03
+// تاريخ الإنشاء: 2025-12-09
+// الإصدار: 6.1 (مع فلتر نسبة التقدم)
 
 // البيانات الإحصائية
 const universities = [
@@ -132,23 +133,29 @@ function renderDepartments() {
     container.innerHTML = html;
 }
 
+// استخراج نسبة التقدم
+function extractProgressPercentage(progress) {
+    const match = progress.match(/(\d+)%/);
+    return match ? match[1] + '%' : 'غير محدد';
+}
+
 // عرض العقود
 function renderContracts() {
     // تم جدولة الزيارة
     const scheduled = contractsData.filter(c => c.visitComplianceStatus === "تم جدولة الزيارة");
-    renderContractsList(scheduled, 'scheduledContracts');
+    renderContractsList(scheduled, 'scheduledContracts', 'Scheduled');
     
     // لم تتم الجدولة
     const notScheduled = contractsData.filter(c => c.visitComplianceStatus === "لم تتم جدولة الزيارة -متاخر عن التاريخ المجدول للزيارة");
-    renderContractsList(notScheduled, 'notScheduledContracts');
+    renderContractsList(notScheduled, 'notScheduledContracts', 'NotScheduled');
     
     // غير محددة
     const undefined = contractsData.filter(c => c.visitComplianceStatus === "غير محددة");
-    renderContractsList(undefined, 'undefinedContracts');
+    renderContractsList(undefined, 'undefinedContracts', 'Undefined');
 }
 
 // عرض قائمة العقود
-function renderContractsList(contracts, containerId) {
+function renderContractsList(contracts, containerId, tabSuffix) {
     const container = document.getElementById(containerId);
     
     if (contracts.length === 0) {
@@ -165,6 +172,9 @@ function renderContractsList(contracts, containerId) {
     
     contracts.forEach(contract => {
         const statusClass = getStatusClass(contract.visitComplianceStatus);
+        const visitDate = contract.visitScheduled && contract.visitScheduled.trim() 
+            ? contract.visitScheduled 
+            : 'لم تتم الجدولة';
         
         html += `
             <div class="contract-card">
@@ -176,7 +186,7 @@ function renderContractsList(contracts, containerId) {
                 <div class="contract-field">
                     <span class="field-icon">📚</span>
                     <div class="field-content">
-                        <span class="field-label">القسم</span>
+                        <span class="field-label">الإدارة</span>
                         <span class="field-value">${contract.department}</span>
                     </div>
                 </div>
@@ -249,7 +259,7 @@ function renderContractsList(contracts, containerId) {
                     <span class="field-icon">🗓️</span>
                     <div class="field-content">
                         <span class="field-label">التاريخ المجدول لزيارة المراجعين</span>
-                        <span class="field-value">${contract.visitScheduled}</span>
+                        <span class="field-value">${visitDate}</span>
                     </div>
                 </div>
                 
@@ -265,6 +275,25 @@ function renderContractsList(contracts, containerId) {
     });
     
     container.innerHTML = html;
+    
+    // تحديث عداد النتائج
+    updateResultsCounter(contracts.length, tabSuffix);
+}
+
+// تحديث عداد النتائج
+function updateResultsCounter(count, tabSuffix) {
+    const counter = document.getElementById(`resultsCount${tabSuffix}`);
+    if (counter) {
+        counter.textContent = `عرض ${count} عقد من أصل ${getTotalForTab(tabSuffix)}`;
+    }
+}
+
+// الحصول على الإجمالي لكل تبويب
+function getTotalForTab(tabSuffix) {
+    if (tabSuffix === 'Scheduled') return 175;
+    if (tabSuffix === 'NotScheduled') return 42;
+    if (tabSuffix === 'Undefined') return 228;
+    return 0;
 }
 
 // تحديد فئة الحالة
@@ -279,10 +308,13 @@ function setupFilters() {
     const filterSelects = [
         'filterUniversityScheduled',
         'filterDepartmentScheduled',
+        'filterProgressScheduled',
         'filterUniversityNotScheduled',
         'filterDepartmentNotScheduled',
+        'filterProgressNotScheduled',
         'filterUniversityUndefined',
-        'filterDepartmentUndefined'
+        'filterDepartmentUndefined',
+        'filterProgressUndefined'
     ];
     
     // ملء قوائم الجامعات
@@ -309,7 +341,10 @@ function setupFilters() {
     
     // إضافة مستمعي الأحداث
     filterSelects.forEach(id => {
-        document.getElementById(id).addEventListener('change', applyFilters);
+        const element = document.getElementById(id);
+        if (element) {
+            element.addEventListener('change', applyFilters);
+        }
     });
 }
 
@@ -320,6 +355,7 @@ function applyFilters() {
     tabs.forEach(tab => {
         const universityFilter = document.getElementById(`filterUniversity${tab}`).value;
         const departmentFilter = document.getElementById(`filterDepartment${tab}`).value;
+        const progressFilter = document.getElementById(`filterProgress${tab}`).value;
         const searchValue = document.getElementById(`search${tab}`).value.toLowerCase();
         
         let statusValue;
@@ -337,6 +373,10 @@ function applyFilters() {
             filtered = filtered.filter(c => c.department === departmentFilter);
         }
         
+        if (progressFilter) {
+            filtered = filtered.filter(c => extractProgressPercentage(c.progress) === progressFilter);
+        }
+        
         if (searchValue) {
             filtered = filtered.filter(c => 
                 c.university.toLowerCase().includes(searchValue) ||
@@ -345,7 +385,7 @@ function applyFilters() {
             );
         }
         
-        renderContractsList(filtered, `${tab.charAt(0).toLowerCase() + tab.slice(1)}Contracts`);
+        renderContractsList(filtered, `${tab.charAt(0).toLowerCase() + tab.slice(1)}Contracts`, tab);
     });
 }
 
@@ -354,7 +394,10 @@ function setupSearch() {
     const searchInputs = ['searchScheduled', 'searchNotScheduled', 'searchUndefined'];
     
     searchInputs.forEach(id => {
-        document.getElementById(id).addEventListener('input', applyFilters);
+        const element = document.getElementById(id);
+        if (element) {
+            element.addEventListener('input', applyFilters);
+        }
     });
     
     // بحث الجامعات

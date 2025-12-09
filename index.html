@@ -114,7 +114,7 @@
 
                 <!-- توزيع الأقسام -->
                 <section class="departments-section">
-                    <h2 class="section-title">📚 توزيع العقود حسب الأقسام</h2>
+                    <h2 class="section-title">📚 توزيع العقود حسب الإدارات</h2>
                     <div class="departments-list" id="departmentsList"></div>
                 </section>
             </div>
@@ -129,9 +129,19 @@
                             <option value="">جميع الجامعات</option>
                         </select>
                         <select class="filter-select" id="filterDepartmentScheduled">
-                            <option value="">جميع الأقسام</option>
+                            <option value="">جميع الإدارات</option>
+                        </select>
+                        <select class="filter-select" id="filterProgressScheduled">
+                            <option value="">جميع نسب التقدم</option>
+                            <option value="0%">0%</option>
+                            <option value="5%">5%</option>
+                            <option value="30%">30%</option>
+                            <option value="40%">40%</option>
+                            <option value="90%">90%</option>
+                            <option value="غير محدد">غير محدد</option>
                         </select>
                     </div>
+                    <div class="results-counter" id="resultsCountScheduled">عرض جميع العقود (175)</div>
                 </div>
                 <div class="contracts-grid" id="scheduledContracts"></div>
             </div>
@@ -146,9 +156,19 @@
                             <option value="">جميع الجامعات</option>
                         </select>
                         <select class="filter-select" id="filterDepartmentNotScheduled">
-                            <option value="">جميع الأقسام</option>
+                            <option value="">جميع الإدارات</option>
+                        </select>
+                        <select class="filter-select" id="filterProgressNotScheduled">
+                            <option value="">جميع نسب التقدم</option>
+                            <option value="0%">0%</option>
+                            <option value="5%">5%</option>
+                            <option value="30%">30%</option>
+                            <option value="40%">40%</option>
+                            <option value="90%">90%</option>
+                            <option value="غير محدد">غير محدد</option>
                         </select>
                     </div>
+                    <div class="results-counter" id="resultsCountNotScheduled">عرض جميع العقود (42)</div>
                 </div>
                 <div class="contracts-grid" id="notScheduledContracts"></div>
             </div>
@@ -163,9 +183,19 @@
                             <option value="">جميع الجامعات</option>
                         </select>
                         <select class="filter-select" id="filterDepartmentUndefined">
-                            <option value="">جميع الأقسام</option>
+                            <option value="">جميع الإدارات</option>
+                        </select>
+                        <select class="filter-select" id="filterProgressUndefined">
+                            <option value="">جميع نسب التقدم</option>
+                            <option value="0%">0%</option>
+                            <option value="5%">5%</option>
+                            <option value="30%">30%</option>
+                            <option value="40%">40%</option>
+                            <option value="90%">90%</option>
+                            <option value="غير محدد">غير محدد</option>
                         </select>
                     </div>
+                    <div class="results-counter" id="resultsCountUndefined">عرض جميع العقود (228)</div>
                 </div>
                 <div class="contracts-grid" id="undefinedContracts"></div>
             </div>
